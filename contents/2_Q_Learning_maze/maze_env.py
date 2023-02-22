@@ -1,5 +1,6 @@
 """
 Reinforcement learning maze example.
+使用tkinter编写的环境
 
 Red rectangle:          explorer.
 Black rectangles:       hells       [reward = -1].

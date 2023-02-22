@@ -12,17 +12,19 @@ import time
 
 np.random.seed(2)  # reproducible
 
-
+# 超参数属于深度学习中的概念
 N_STATES = 6   # the length of the 1 dimensional world
 ACTIONS = ['left', 'right']     # available actions
 EPSILON = 0.9   # greedy police
 ALPHA = 0.1     # learning rate
 GAMMA = 0.9    # discount factor
+# 13回合已经足够训练
 MAX_EPISODES = 13   # maximum episodes
 FRESH_TIME = 0.3    # fresh time for one move
 
 
 def build_q_table(n_states, actions):
+    # 使用pandas建立初始化Q Table
     table = pd.DataFrame(
         np.zeros((n_states, len(actions))),     # q_table initial values
         columns=actions,    # actions's name
@@ -42,6 +44,7 @@ def choose_action(state, q_table):
 
 
 def get_env_feedback(S, A):
+    # 环境对行为做出的反应，相当于老师
     # This is how agent will interact with the environment
     if A == 'right':    # move right
         if S == N_STATES - 2:   # terminate
@@ -56,10 +59,12 @@ def get_env_feedback(S, A):
             S_ = S  # reach the wall
         else:
             S_ = S - 1
+    # 状态S采取动作A，到达的新状态是S_，回报是R
     return S_, R
 
 
 def update_env(S, episode, step_counter):
+    # 建立环境
     # This is how environment be updated
     env_list = ['-']*(N_STATES-1) + ['T']   # '---------T' our environment
     if S == 'terminal':
@@ -75,11 +80,12 @@ def update_env(S, episode, step_counter):
 
 
 def rl():
+    # 主循环
     # main part of RL loop
     q_table = build_q_table(N_STATES, ACTIONS)
     for episode in range(MAX_EPISODES):
         step_counter = 0
-        S = 0
+        S = 0  # 初始状态
         is_terminated = False
         update_env(S, episode, step_counter)
         while not is_terminated:
@@ -93,6 +99,7 @@ def rl():
                 q_target = R     # next state is terminal
                 is_terminated = True    # terminate this episode
 
+            # 单步更新？
             q_table.loc[S, A] += ALPHA * (q_target - q_predict)  # update
             S = S_  # move to next state
 
@@ -102,6 +109,8 @@ def rl():
 
 
 if __name__ == "__main__":
+    # 创建功能
+    # 创建环境（难度大）
     q_table = rl()
     print('\r\nQ-table:\n')
     print(q_table)
