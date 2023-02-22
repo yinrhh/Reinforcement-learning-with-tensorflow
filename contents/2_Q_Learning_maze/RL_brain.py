@@ -15,6 +15,7 @@ class QLearningTable:
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
+        # 空的Q Table
         self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
 
     def choose_action(self, observation):
@@ -27,13 +28,16 @@ class QLearningTable:
             action = np.random.choice(state_action[state_action == np.max(state_action)].index)
         else:
             # choose random action
+            # 10%探索，避免陷入局部最优
             action = np.random.choice(self.actions)
         return action
 
     def learn(self, s, a, r, s_):
+        # 检验新的state
         self.check_state_exist(s_)
         q_predict = self.q_table.loc[s, a]
         if s_ != 'terminal':
+            # 此处选择奖励最大的动作进行判断，但并不是下一步一定要选择的动作
             q_target = r + self.gamma * self.q_table.loc[s_, :].max()  # next state is not terminal
         else:
             q_target = r  # next state is terminal

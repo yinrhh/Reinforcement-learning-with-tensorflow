@@ -29,9 +29,11 @@ def update():
             action = RL.choose_action(str(observation))
 
             # RL take action and get next observation and reward
+            # 放到环境中，并收到环境的反馈
             observation_, reward, done = env.step(action)
 
             # RL learn from this transition
+            # 把所有信息放到RL中进行学习
             RL.learn(str(observation), action, reward, str(observation_))
 
             # swap observation
@@ -48,6 +50,6 @@ def update():
 if __name__ == "__main__":
     env = Maze()
     RL = QLearningTable(actions=list(range(env.n_actions)))
-
+    # tkinter的方法
     env.after(100, update)
     env.mainloop()

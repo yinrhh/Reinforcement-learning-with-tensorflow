@@ -10,6 +10,7 @@ import pandas as pd
 
 
 class RL(object):
+    # 定义RL用于继承
     def __init__(self, action_space, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9):
         self.actions = action_space  # a list
         self.lr = learning_rate
@@ -32,6 +33,7 @@ class RL(object):
     def choose_action(self, observation):
         self.check_state_exist(observation)
         # action selection
+        # 不是纯贪婪算法
         if np.random.rand() < self.epsilon:
             # choose best action
             state_action = self.q_table.loc[observation, :]
@@ -42,6 +44,7 @@ class RL(object):
             action = np.random.choice(self.actions)
         return action
 
+    # 更新
     def learn(self, *args):
         pass
 
@@ -51,6 +54,7 @@ class QLearningTable(RL):
     def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9):
         super(QLearningTable, self).__init__(actions, learning_rate, reward_decay, e_greedy)
 
+    # 方法名一样即可重写父类方法
     def learn(self, s, a, r, s_):
         self.check_state_exist(s_)
         q_predict = self.q_table.loc[s, a]

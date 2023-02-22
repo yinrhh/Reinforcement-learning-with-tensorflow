@@ -27,9 +27,11 @@ def update():
             observation_, reward, done = env.step(action)
 
             # RL choose action based on next observation
+            # 一定是选择用于更新Q表的Action，虽然存在一定的随机性。由此可以避免局部最优
             action_ = RL.choose_action(str(observation_))
 
             # RL learn from this transition (s, a, r, s, a) ==> Sarsa
+            # Q Learning中的下一个action一定是最大，sarsa却不一定
             RL.learn(str(observation), action, reward, str(observation_), action_)
 
             # swap observation and action

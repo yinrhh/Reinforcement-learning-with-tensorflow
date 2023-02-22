@@ -67,6 +67,7 @@ class DeepQNetwork:
         self.cost_his = []
 
     def _build_net(self):
+        # 建立两个结构相同，但参数不同的神经网络
         # ------------------ build evaluate_net ------------------
         self.s = tf.placeholder(tf.float32, [None, self.n_features], name='s')  # input
         self.q_target = tf.placeholder(tf.float32, [None, self.n_actions], name='Q_target')  # for calculating loss
@@ -125,6 +126,7 @@ class DeepQNetwork:
 
     def choose_action(self, observation):
         # to have batch dimension when feed into tf placeholder
+        # 便于tensorflow处理，需要升维度
         observation = observation[np.newaxis, :]
 
         if np.random.uniform() < self.epsilon:
