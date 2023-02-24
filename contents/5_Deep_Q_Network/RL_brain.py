@@ -147,6 +147,7 @@ class DeepQNetwork:
     def learn(self):
         # check to replace target parameters
         if self.learn_step_counter % self.replace_target_iter == 0:
+            # 将target参数替换为eval的参数
             self.sess.run(self.replace_target_op)
             print('\ntarget_params_replaced\n')
 
