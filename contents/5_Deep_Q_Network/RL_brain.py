@@ -31,8 +31,10 @@ class DeepQNetwork:
             memory_size=500,
             batch_size=32,
             e_greedy_increment=None,
+            # 控制tensorboard的输出
             output_graph=False,
     ):
+        # 超参数
         self.n_actions = n_actions
         self.n_features = n_features
         self.lr = learning_rate
@@ -58,6 +60,7 @@ class DeepQNetwork:
 
         self.sess = tf.Session()
 
+        # 输出tensorboard
         if output_graph:
             # $ tensorboard --logdir=logs
             # tf.train.SummaryWriter soon be deprecated, use following
@@ -81,9 +84,11 @@ class DeepQNetwork:
             with tf.variable_scope('l1'):
                 w1 = tf.get_variable('w1', [self.n_features, n_l1], initializer=w_initializer, collections=c_names)
                 b1 = tf.get_variable('b1', [1, n_l1], initializer=b_initializer, collections=c_names)
+                # 激励函数选择relu
                 l1 = tf.nn.relu(tf.matmul(self.s, w1) + b1)
 
             # second layer. collections is used later when assign to target net
+            # 用于预测Q_Target，Q现实，这个神经网络不会及时更新参数。属于DQN两大利器之一的Fixed Q_Target
             with tf.variable_scope('l2'):
                 w2 = tf.get_variable('w2', [n_l1, self.n_actions], initializer=w_initializer, collections=c_names)
                 b2 = tf.get_variable('b2', [1, self.n_actions], initializer=b_initializer, collections=c_names)
@@ -92,6 +97,7 @@ class DeepQNetwork:
         with tf.variable_scope('loss'):
             self.loss = tf.reduce_mean(tf.squared_difference(self.q_target, self.q_eval))
         with tf.variable_scope('train'):
+            # 优化器选择RMSPropOptimizer
             self._train_op = tf.train.RMSPropOptimizer(self.lr).minimize(self.loss)
 
         # ------------------ build target_net ------------------
@@ -112,6 +118,7 @@ class DeepQNetwork:
                 b2 = tf.get_variable('b2', [1, self.n_actions], initializer=b_initializer, collections=c_names)
                 self.q_next = tf.matmul(l1, w2) + b2
 
+    # DQN两大利器之一，即Experience replay
     def store_transition(self, s, a, r, s_):
         if not hasattr(self, 'memory_counter'):
             self.memory_counter = 0

@@ -20,6 +20,7 @@ def run_maze():
 
             RL.store_transition(observation, action, reward, observation_)
 
+            # 先累计一些记忆，再开始学习
             if (step > 200) and (step % 5 == 0):
                 RL.learn()
 
