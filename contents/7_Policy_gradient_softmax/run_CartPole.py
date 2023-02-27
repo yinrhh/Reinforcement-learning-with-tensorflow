@@ -45,6 +45,7 @@ for i_episode in range(3000):
 
         observation_, reward, done, info = env.step(action)
 
+        # 使用reward诱导更新参数
         RL.store_transition(observation, action, reward)
 
         if done:
@@ -57,6 +58,7 @@ for i_episode in range(3000):
             if running_reward > DISPLAY_REWARD_THRESHOLD: RENDER = True     # rendering
             print("episode:", i_episode, "  reward:", int(running_reward))
 
+            # 处理整个回合的reward，从而正确引导梯度下降
             vt = RL.learn()
 
             if i_episode == 0:

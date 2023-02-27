@@ -88,6 +88,7 @@ class PolicyGradient:
         action = np.random.choice(range(prob_weights.shape[1]), p=prob_weights.ravel())  # select action w.r.t the actions prob
         return action
 
+    # 单回合记忆
     def store_transition(self, s, a, r):
         self.ep_obs.append(s)
         self.ep_as.append(a)

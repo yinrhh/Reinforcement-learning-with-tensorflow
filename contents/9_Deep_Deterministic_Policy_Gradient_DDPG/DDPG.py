@@ -19,7 +19,7 @@ import time
 np.random.seed(1)
 tf.set_random_seed(1)
 
-#####################  hyper parameters  ####################
+#####################  hyper parameters 超参数 ####################
 
 MAX_EPISODES = 200
 MAX_EP_STEPS = 200
@@ -199,6 +199,7 @@ env.seed(1)
 
 state_dim = env.observation_space.shape[0]
 action_dim = env.action_space.shape[0]
+# 每一个action的幅度
 action_bound = env.action_space.high
 
 # all placeholder for tf
@@ -215,6 +216,7 @@ sess = tf.Session()
 # Create actor and critic.
 # They are actually connected to each other, details can be seen in tensorboard or in this picture:
 actor = Actor(sess, action_dim, action_bound, LR_A, REPLACEMENT)
+# critic需要接收actor的结果
 critic = Critic(sess, state_dim, action_dim, LR_C, GAMMA, REPLACEMENT, actor.a, actor.a_)
 actor.add_grad_to_graph(critic.a_grads)
 
