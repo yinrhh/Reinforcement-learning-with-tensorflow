@@ -24,6 +24,7 @@ def update():
         while True:
             # fresh env
             env.render()
+            print("haha")
 
             # RL choose action based on observation
             action = RL.choose_action(str(observation))
